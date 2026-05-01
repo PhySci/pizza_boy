@@ -1,60 +1,92 @@
-import './style.css'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+import Phaser from "phaser";
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+class PizzaBoy extends Phaser.Scene {
+    constructor() {
+        super("GameScene");
+    }
 
-<div class="ticks"></div>
+    preload() {
+        this.load.image("back", "/assets/background.png");
+    }
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+    create() {
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+        this.n_pizza = 0
 
-setupCounter(document.querySelector('#counter'))
+        this.add.image(0, 0, "back").setOrigin(0, 0).setDisplaySize(360, 640);
+
+        const button = this.add.rectangle(90, 220, 70, 40, 0x4CAF50)
+            .setInteractive();
+
+        const label = this.add.text(90, 220, "Приготовить", {
+            fontSize: "11px",
+            color: "#ffffff"
+        }).setOrigin(0.5);
+
+
+        button.on("pointerup", () => {
+            button.setScale(1);
+            console.log("click!");
+        });
+
+        this.n_pizza_text = this.add.text(20, 250,
+            "В вашей пиццерии есть " + this.n_pizza + " пицц",
+            {
+                "fontSize": "14px"
+            })
+
+        button.on("pointerdown", () => {
+            console.log("button pressed");
+            button.setScale(0.95);
+            this.n_pizza++;
+            this.n_pizza_text.setText("В вашей пиццерии есть " + this.n_pizza + " пицц");
+        });
+
+
+        // this.score = 0;
+        //
+        // this.text = this.add.text(180, 120, "хх", {
+        //     fontSize: "48px",
+        //     color: "#863c3c"
+        // }).setOrigin(0.5);
+        //
+        // this.button = this.add.circle(180, 350, 90, 0xffcc00)
+        //     .setInteractive({ useHandCursor: true });
+        //
+        // this.label = this.add.text(180, 350, "TAP", {
+        //     fontSize: "24px",
+        //     color: "#000"
+        // }).setOrigin(0.5);
+        //s
+        // this.button.on("pointerdown", () => {
+        //     this.score++;
+        //
+        //     this.text.setText(this.score);
+        //
+        //     this.tweens.add({
+        //         targets: this.button,
+        //         scale: 1.1,
+        //         duration: 80,
+        //         yoyo: true
+        //     });
+        // });
+    }
+}
+
+
+const config = {
+    type: Phaser.AUTO,
+    width: 360,
+    height: 640,
+//    backgroundColor: "#1b1b1b",
+
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+
+    scene: [PizzaBoy]
+};
+
+
+new Phaser.Game(config);
